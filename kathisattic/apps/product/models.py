@@ -58,6 +58,11 @@ class Product(BasePage):
     def slides(self):
         return ProductSlide.objects.filter(parent=self).order_by('order').select_related('slide_image')
 
+    def get_price(self):
+        if self.suggested_price:
+            return '$%s'%(self.suggested_price)
+        return ''
+
     def get_page_content_blocks(self):
         return []
 
