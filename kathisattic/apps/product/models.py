@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 from django.conf import settings
 from django.core.urlresolvers import reverse
@@ -50,6 +52,7 @@ class Product(BasePage):
         default=DRAFT,
         null=True
     )
+    key = models.CharField(max_length=255,null=True, unique=True)
 
     def get_absolute_url(self):
        return reverse('product_detail',  args=[self.slug] )
@@ -65,6 +68,14 @@ class Product(BasePage):
 
     def get_page_content_blocks(self):
         return []
+
+    def save(self, *args, **kwargs):
+        
+        if not self.key:
+            self.key = str(uuid.uuid4())[:5]
+
+        super(Product, self).save(*args, **kwargs)
+         
 
 class ProductTag(BasePageTag, HierarchicalAtom):  
     default_template = 'product_tag'

@@ -64,6 +64,7 @@ class ProductAdmin(BasePageAdmin, UnsavedChangesAdmin):
     core_fields_list.insert(5, 'tags')
     core_fields_list.insert(5, ('suggested_price', 'sale_price'))
     core_fields_list.insert(5, 'sale_status')
+    core_fields_list.insert(5, 'key')
     core_fields = tuple(core_fields_list)
 
 
@@ -105,6 +106,10 @@ class ProductAdmin(BasePageAdmin, UnsavedChangesAdmin):
             'classes': ( 'grp-collapse grp-closed', )
         })
     )
+
+    list_display = ( "title", "publication_status", "sale_status", "suggested_price",  "key",)
+    list_display_links = ("title",)
+    search_fields = ('title','admin_note', 'key')
 
 class ProductTagAdmin(BaseCategoryAdmin, UnsavedChangesAdmin):
     pass
