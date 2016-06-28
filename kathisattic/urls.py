@@ -53,8 +53,8 @@ urlpatterns +=  patterns('',
     url(r'^', include('kathisattic.apps.media.urls')),
     url(r'^', include('kathisattic.apps.form.urls')),
     url(r'^', include('kathisattic.apps.email.urls')),
-    url(r'^', include('kathisattic.apps.page.urls')),
     url(r'^', include('kathisattic.apps.product.urls')),
+    url(r'^', include('kathisattic.apps.page.urls')),
     
 )
 

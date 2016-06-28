@@ -5,6 +5,7 @@ from carbon.atoms.admin.content import BaseVersionableAdmin
 from carbon.compounds.page.admin import PageAdmin as BasePageAdmin
 from carbon.compounds.page.admin import PageTagAdmin as BasePageTagAdmin
 from carbon.compounds.page.admin import PageContentBlockInline as BasePageContentBlockInline
+from carbon.atoms.admin.taxonomy import BaseCategoryAdmin
 
 from django_unsaved_changes.admin import UnsavedChangesAdmin
 
@@ -61,13 +62,17 @@ class ProductAdmin(BasePageAdmin, UnsavedChangesAdmin):
 
     core_fields_list = list(BasePageAdmin.core_fields)
     core_fields_list.insert(5, 'tags')
+    core_fields_list.insert(5, ('suggested_price', 'sale_price'))
+    core_fields_list.insert(5, 'sale_status')
     core_fields = tuple(core_fields_list)
+
+
 
     autocomplete_lookup_fields = BasePageAdmin.autocomplete_lookup_fields
     m2m_fields_list = list(autocomplete_lookup_fields['m2m'])
     m2m_fields_list.insert(0, 'tags')
     autocomplete_lookup_fields['m2m'] = tuple(m2m_fields_list)
-
+    
     raw_id_fields = BasePageAdmin.raw_id_fields
     raw_id_fields_list = list(raw_id_fields)
     raw_id_fields_list.insert(0, 'tags')
@@ -101,7 +106,7 @@ class ProductAdmin(BasePageAdmin, UnsavedChangesAdmin):
         })
     )
 
-class ProductTagAdmin(BasePageTagAdmin, UnsavedChangesAdmin):
+class ProductTagAdmin(BaseCategoryAdmin, UnsavedChangesAdmin):
     pass
 
 
