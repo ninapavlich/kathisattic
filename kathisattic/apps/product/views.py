@@ -52,10 +52,11 @@ class ProductListView(ObjectTemplateResponseMixin, ListView):
         return ['product-list']
 
     def get_queryset(self):
-        tag_filter = self.kwargs['tag']
+        tag_filter = self.request.GET.get('tag', None)
         if tag_filter:
             try:
-                tag = ProductTag.object.get(slug=tag_filter)
+                tag = ProductTag.objects.get(slug=tag_filter)
+                print tag
                 return Product.objects.filter(sale_status=Product.FOR_SALE).filter(tags__in=[tag])
             except:
                 return None
