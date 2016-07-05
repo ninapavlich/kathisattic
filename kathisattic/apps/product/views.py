@@ -47,6 +47,7 @@ class ProductDetail(BasePageBlockView, BasePageDetail):
 
 class ProductListView(ObjectTemplateResponseMixin, ListView):
     model = Product    
+    tag = None
 
     def get_template_names(self):
         return ['product-list']
@@ -56,13 +57,18 @@ class ProductListView(ObjectTemplateResponseMixin, ListView):
         if tag_filter:
             try:
                 tag = ProductTag.objects.get(slug=tag_filter)
-                print tag
+                self.tag = tag
                 return Product.objects.filter(sale_status=Product.FOR_SALE).filter(tags__in=[tag])
             except:
                 return None
 
         else:
             return Product.objects.filter(sale_status=Product.FOR_SALE)
+
+    def get_context_data(self, **kwargs):
+        context = super(ProductListView, self).get_context_data(**kwargs)
+        context['tag'] = self.tag
+        return context
 
 
 class ProductTagView(BasePageTagView):

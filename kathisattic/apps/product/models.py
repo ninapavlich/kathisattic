@@ -36,6 +36,21 @@ class Product(BasePage):
         (DONATED, 'Donated'),
     )
 
+    NEW = 'new'
+    LIKE_NEW = 'like-new'
+    EXCELLENT = 'excellent'
+    GOOD = 'good'
+    FAIR = 'fair'
+    SALVAGE = 'salvage'
+    CONDITION_OPTIONS = (
+        (NEW, 'New'),
+        (LIKE_NEW, 'Like New'),
+        (EXCELLENT, 'Excellent'),
+        (GOOD, 'Good'),
+        (FAIR, 'Fair'),
+        (SALVAGE, 'Salvage'),
+    )
+
     
 
     #suggested_price
@@ -53,6 +68,18 @@ class Product(BasePage):
         null=True
     )
     key = models.CharField(max_length=255,null=True, unique=True)
+
+    length = models.CharField(max_length=255,null=True, unique=True)
+    width = models.CharField(max_length=255,null=True, unique=True)
+    height = models.CharField(max_length=255,null=True, unique=True)
+    weight = models.CharField(max_length=255,null=True, unique=True)
+    condition = models.CharField(
+        max_length=255,
+        choices=CONDITION_OPTIONS,
+        default=GOOD,
+        null=True
+    )
+    related_products = models.ManyToManyField('self', blank=True, related_name='%(app_label)s_%(class)s_related_products')
 
     def get_absolute_url(self):
        return reverse('product_detail',  args=[self.slug] )
@@ -84,12 +111,19 @@ class Product(BasePage):
 class ProductTag(BasePageTag, HierarchicalAtom):  
     default_template = 'product_tag'
 
+    def get_absolute_url(self):
+       return "%s?tag=%s"%(reverse('product_list_view'), self.slug)
+
+    def get_product_count(self):
+       return Product.objects.filter(sale_status=Product.FOR_SALE).filter(tags__in=[self]).count()
+
 
 class ProductSlide(VersionableAtom, OrderedItemAtom):
     
     parent = models.ForeignKey('product.Product')
 
     slide_image = models.ForeignKey('media.Image', null=True, blank=True)
+
 
     class Meta:
         ordering = ['order']

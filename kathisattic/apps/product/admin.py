@@ -60,23 +60,35 @@ class ProductAdmin(BasePageAdmin, UnsavedChangesAdmin):
 
     #related_blogposts
 
-    core_fields_list = list(BasePageAdmin.core_fields)
-    core_fields_list.insert(5, 'tags')
-    core_fields_list.insert(5, ('suggested_price', 'sale_price'))
-    core_fields_list.insert(5, 'sale_status')
-    core_fields_list.insert(5, 'key')
-    core_fields = tuple(core_fields_list)
+    core_fields = (
+        ('title','slug'),
+        ('image','image_preview'),
+        ('suggested_price', 'sale_price'),
+        ('sale_status','key',),
+        'condition',        
+        'length', 'width', 'height',
+        'weight',
+        
+        'tags',
+        'related_products',
+        'synopsis',
+        'content',
+        
+    )
+
 
 
 
     autocomplete_lookup_fields = BasePageAdmin.autocomplete_lookup_fields
     m2m_fields_list = list(autocomplete_lookup_fields['m2m'])
     m2m_fields_list.insert(0, 'tags')
+    m2m_fields_list.insert(0, 'related_products')
     autocomplete_lookup_fields['m2m'] = tuple(m2m_fields_list)
     
     raw_id_fields = BasePageAdmin.raw_id_fields
     raw_id_fields_list = list(raw_id_fields)
     raw_id_fields_list.insert(0, 'tags')
+    raw_id_fields_list.insert(0, 'related_products')
     raw_id_fields = tuple(raw_id_fields_list)
 
     fieldsets = (
