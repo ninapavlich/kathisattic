@@ -14,5 +14,4 @@ ENV_HEROKU = 'heroku'
 ENV_PRODUCTION = 'production'
 
 ENVIRONMENT = os.environ.get( 'ENVIRONMENT', ENV_LOCAL )
-print ENVIRONMENT
 exec( 'from %s import *' % ENVIRONMENT )
