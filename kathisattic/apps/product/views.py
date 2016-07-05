@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.views.generic.edit import CreateView
 from django.views.generic.list import ListView
 
@@ -48,26 +49,37 @@ class ProductDetail(BasePageBlockView, BasePageDetail):
 class ProductListView(ObjectTemplateResponseMixin, ListView):
     model = Product    
     tag = None
+    search_filter = None
 
     def get_template_names(self):
         return ['product-list']
 
     def get_queryset(self):
         tag_filter = self.request.GET.get('tag', None)
+        search_filter = self.request.GET.get('q', None)
+        products = Product.objects.filter(sale_status=Product.FOR_SALE)
+
         if tag_filter:
             try:
                 tag = ProductTag.objects.get(slug=tag_filter)
                 self.tag = tag
-                return Product.objects.filter(sale_status=Product.FOR_SALE).filter(tags__in=[tag])
+                return products.filter(tags__in=[tag])
             except:
                 return None
 
+        elif search_filter:
+            self.search_filter = search_filter
+            return products.filter(
+                Q(content__icontains=search_filter)|Q(title__icontains=search_filter)|Q(key__icontains=search_filter)|Q(synopsis__icontains=search_filter)
+            )
+
         else:
-            return Product.objects.filter(sale_status=Product.FOR_SALE)
+            return products
 
     def get_context_data(self, **kwargs):
         context = super(ProductListView, self).get_context_data(**kwargs)
         context['tag'] = self.tag
+        context['search_filter'] = self.search_filter
         return context
 
 
