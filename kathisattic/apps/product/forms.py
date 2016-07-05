@@ -10,5 +10,5 @@ class ProductCreateForm(forms.ModelForm):
 
     class Meta:
         model = Product
-        fields = ['title', 'suggested_price', 'content', 'sale_status', 'tags']
+        fields = ['title', 'suggested_price',  'sale_status', 'tags', 'condition', 'length', 'width', 'height', 'weight', 'content',]
         widgets = {"tags":CheckboxSelectMultiple(),}
