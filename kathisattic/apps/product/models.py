@@ -74,6 +74,10 @@ class Product(BasePage):
         if not self.key:
             self.key = str(uuid.uuid4())[:5]
 
+        #always be published, using sale_status to manage status.
+        if not self.pk:
+            self.publication_status = 100
+
         super(Product, self).save(*args, **kwargs)
          
 

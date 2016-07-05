@@ -1,4 +1,5 @@
 from django.views.generic.edit import CreateView
+from django.views.generic.list import ListView
 
 
 from carbon.compounds.page.views import PageDetail as BasePageDetail
@@ -22,22 +23,11 @@ class ProductCreateView(ObjectTemplateResponseMixin, CreateView):
     def get_template_names(self):
         return ['product-add']
 
-    def get_template(self):
-        return self.object.template
-
   
     def form_valid(self, form):
-        print 'form valid? %s'%(form.cleaned_data['raw_image'])
         img = Image(image=form.cleaned_data['raw_image'])
         img.save()
-        print 'IMAGE? %s'%(img)
         form.instance.image = img
-        # try:
-        #     user = User.objects.get(email=form.email)
-        # except User.DoesNotExist:
-        #     user = User.objects.create_user(form.email, form.email, ''.join([random.choice(string.digits + string.letters) for i in range(0, 10)]))
-        #     user.save()
-        # form.instance.user = user
         return super(ProductCreateView, self).form_valid(form)
 
 
@@ -52,6 +42,27 @@ class ProductDetail(BasePageBlockView, BasePageDetail):
 
     def get_template(self):
         return self.object.template
+
+
+
+class ProductListView(ObjectTemplateResponseMixin, ListView):
+    model = Product    
+
+    def get_template_names(self):
+        return ['product-list']
+
+    def get_queryset(self):
+        tag_filter = self.kwargs['tag']
+        if tag_filter:
+            try:
+                tag = ProductTag.object.get(slug=tag_filter)
+                return Product.objects.filter(sale_status=Product.FOR_SALE).filter(tags__in=[tag])
+            except:
+                return None
+
+        else:
+            return Product.objects.filter(sale_status=Product.FOR_SALE)
+
 
 class ProductTagView(BasePageTagView):
 

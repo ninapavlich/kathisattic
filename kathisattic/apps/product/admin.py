@@ -107,7 +107,7 @@ class ProductAdmin(BasePageAdmin, UnsavedChangesAdmin):
         })
     )
 
-    list_display = ( "title", "publication_status", "sale_status", "suggested_price",  "key",)
+    list_display = ( "title",  "sale_status", "suggested_price",  "key",)
     list_display_links = ("title",)
     search_fields = ('title','admin_note', 'key')
 
