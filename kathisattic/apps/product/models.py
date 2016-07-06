@@ -69,10 +69,10 @@ class Product(BasePage):
     )
     key = models.CharField(max_length=255,null=True, unique=True)
 
-    length = models.CharField(max_length=255,null=True, unique=True)
-    width = models.CharField(max_length=255,null=True, unique=True)
-    height = models.CharField(max_length=255,null=True, unique=True)
-    weight = models.CharField(max_length=255,null=True, unique=True)
+    length = models.CharField(max_length=255,null=True, blank=True)
+    width = models.CharField(max_length=255,null=True, blank=True)
+    height = models.CharField(max_length=255,null=True, blank=True)
+    weight = models.CharField(max_length=255,null=True, blank=True)
     condition = models.CharField(
         max_length=255,
         choices=CONDITION_OPTIONS,
